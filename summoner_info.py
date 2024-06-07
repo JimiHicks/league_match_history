@@ -37,7 +37,7 @@ def get_match_id_by_summoner_puuid(puuid, matches_count, region=settings.DEFUALT
         print(f"Issue getting match_id from puuid: {e}")
         return None
     
-def did_player_win_match(puuid, match_id, region=settings.DEFUALT_REGION):
+def match_results(puuid, match_id, region=settings.DEFUALT_REGION):
     params = {
         'api_key': settings.API_KEY, 
     }
@@ -57,7 +57,8 @@ def did_player_win_match(puuid, match_id, region=settings.DEFUALT_REGION):
         return None
 
     player_info = match_data['info']['participants'][player_index]
-    return player_info['win'] 
+    match_result = player_info['win']
+    return match_result
 
 def win_percentage_of_last_20_games(game_name, tag_line, region=settings.DEFUALT_REGION, region_code=settings.DEFUALT_REGION_CODE):
     summoner = get_summoner_info(game_name, tag_line)
@@ -65,7 +66,7 @@ def win_percentage_of_last_20_games(game_name, tag_line, region=settings.DEFUALT
     
     wins = 0
     for match in matches:
-        if did_player_win_match(summoner['puuid'], match):
+        if match_results(summoner['puuid'], match):
             wins += 1
 
     return (wins/len(matches))*100

@@ -6,7 +6,8 @@ tag_line = 'brnze'
 def main(): 
     summoner = get_summoner_info(game_name, tag_line)
 
-    summoner_matches_ids = get_match_id_by_summoner_puuid(summoner['puuid'], 20)
+    summoner_matches_ids = get_match_id_by_summoner_puuid(summoner['puuid'], 10)
+    print(summoner_matches_ids)
 
     win = did_player_win_match(summoner['puuid'], summoner_matches_ids[0])
 
