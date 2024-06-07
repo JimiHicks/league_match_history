@@ -69,3 +69,25 @@ def win_percentage_of_last_20_games(game_name, tag_line, region=settings.DEFUALT
             wins += 1
 
     return (wins/len(matches))*100
+
+def get_player_champion(puuid, match_id, region=settings.DEFUALT_REGION):
+    params = {
+        'api_key': settings.API_KEY, 
+    }
+    api_url = f"https://{region}.api.riotgames.com/lol/match/v5/matches/{match_id}"
+
+    try: 
+        response = requests.get(api_url, params=urlencode(params))
+        response.raise_for_status()
+        match_data = response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Issue getting match data from match_id: {e}")
+        return None
+    
+    if puuid in match_data['metadata']['participants']:
+        player_index = match_data['metadata']['participants'].index(puuid)
+    else: 
+        return None
+
+    player_info = match_data['info']['participants'][player_index]
+    return player_info['championName'] 
